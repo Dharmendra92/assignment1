@@ -77,6 +77,11 @@ settings.addGroup('Accounts', function() {
 		public: true,
 		i18nLabel: 'Placeholder_for_password_login_field',
 	});
+	this.add('Accounts_PhonePlaceholder', '', {
+		type: 'number',
+		public: true,
+		i18nLabel: 'Placeholder_for_phone_login_field',
+	});
 
 	this.add('Accounts_ConfirmPasswordPlaceholder', '', {
 		type: 'string',

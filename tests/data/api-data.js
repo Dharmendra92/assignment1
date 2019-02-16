@@ -27,6 +27,8 @@ export const credentials = {
 	['X-User-Id']: undefined,
 };
 export const login = {
+
+	console.log("dfdssg")
 	user: adminUsername,
 	password: adminPassword,
 };

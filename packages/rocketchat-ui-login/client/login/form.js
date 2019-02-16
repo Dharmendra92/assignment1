@@ -7,6 +7,7 @@ import { Template } from 'meteor/templating';
 import { settings } from 'meteor/rocketchat:settings';
 import { callbacks } from 'meteor/rocketchat:callbacks';
 import { t, handleError } from 'meteor/rocketchat:utils';
+import { HTTP } from 'meteor/http';
 import _ from 'underscore';
 import s from 'underscore.string';
 import toastr from 'toastr';
@@ -66,6 +67,9 @@ Template.loginForm.helpers({
 	passwordPlaceholder() {
 		return settings.get('Accounts_PasswordPlaceholder') || t('Password');
 	},
+	phonePlaceholder() {
+		return settings.get('Accounts_PhonePlaceholder') || t('Phone');
+	},
 	confirmPasswordPlaceholder() {
 		return settings.get('Accounts_ConfirmPasswordPlaceholder') || t('Confirm_password');
 	},
@@ -80,7 +84,10 @@ Template.loginForm.events({
 		$(event.target).find('button.login').focus();
 		instance.loading.set(true);
 		const formData = instance.validate();
+		console.log(formData)
+		console.log(instance)
 		const state = instance.state.get();
+		console.log(state)
 		if (formData) {
 			if (state === 'email-verification') {
 				Meteor.call('sendConfirmationEmail', s.trim(formData.email), () => {
@@ -218,10 +225,21 @@ Template.loginForm.onCreated(function() {
 	};
 	this.validate = function() {
 		const formData = $('#login-card').serializeArray();
+		console.log(formData)
 		const formObj = {};
 		const validationObj = {};
 		formData.forEach((field) => {
 			formObj[field.name] = field.value;
+		});
+		console.log(formObj.login_phone)
+		HTTP.call('POST', 'http://35.200.136.212:80/api/v1/users.register', {
+		  data: { contact:formObj.login_phone }, headers: {
+        "Content-Type": "application/json"
+      },
+		}, (error, result) => {
+		  if (!error) {
+		    console.log(result)
+		  }
 		});
 		const state = instance.state.get();
 		if (state !== 'login') {
